@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+  <spell>
+    <id>0</id>
+    <name>Fire</name>
+    <mp>3</mp>
+    <damage>6</damage>
+    <element>fire</element>
+    <flags>burn=20</flags>
+  </spell>
+  <spell>
+    <id>1</id>
+    <name>Poison Gas</name>
+    <mp>5</mp>
+    <damage>9</damage>
+    <element>poison</element>
+    <flags>poison=20</flags>
+  </spell>
+  <spell>
+    <id>2</id>
+    <name>Recovery</name>
+    <mp>10</mp>
+    <damage>0</damage>
+    <element>none</element>
+    <flags>heal=30</flags>
+  </spell>
+  <spell>
+    <id>3</id>
+    <name>Rage</name>
+    <mp>12</mp>
+    <damage>0</damage>
+    <element>0</element>
+    <flags>double_attack=3</flags>
+  </spell>
+  <spell>
+    <id>4</id>
+    <name>Shield</name>
+    <mp>12</mp>
+    <damage>0</damage>
+    <element>0</element>
+    <flags>double_defense=3</flags>
+  </spell>
+</data>

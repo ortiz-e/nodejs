@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+<room>
+	<id>0</id>
+	<title>The Forest of Yumega</title>
+	<random_encounters>true</random_encounters>
+	<re_button>Explore</re_button>
+	<items>true</items>
+	<item_list>1,5</item_list>
+	<map_gui>0=16,1=16,0=12,0=12,0=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,0=17,1=17,0=12,0=12,0=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,0=16,1=16,0=12,0=12,0=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,0=17,1=17,0=12,0=12,0=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3</map_gui>
+	<extra_buttons>none</extra_buttons>
+	<begin_text>$username: I have been lost here for many moons and I can't seem to find my way out.</begin_text>
+	<item_found5>$username: Wow this is a very shiny emerald; it looks mystical. \nAgatha: Stay away from it! It is a piece of the Jewel of Ikana. Its power keeps evil spirits at bay. $do_decision1</item_found5>
+	<decision1>Take the emerald||Listen to Agatha</decision1>
+	<trigger1-0>Agatha: What are you doing? The emerald must rest in its place! \n\n [Suddenly stormy clouds took over the forest, lightning struck, evil chanting could be heard in the distance.] \n \n$username: Sorry, I'll just put it back. Agatha: Leave this place! $do_toroom1</trigger1-0>
+	<trigger1-1>Agatha: Why are you here anyway? This forest is forbidden and sacred. \n$username: I am a traveler who got lost long ago and wandered into these foreign lands. \nAgatha: I will take you out of here. $do_toroom1</trigger1-1>
+</room>
+<room>
+	<id>1</id>
+	<title>The Maze of Yumega</title>
+	<random_encounters>true</random_encounters>
+	<re_button>Explore Area</re_button>
+	<items>true</items>
+	<item_list>1,2,3</item_list>
+	<map_gui>0=16,1=16,4=12,4=12,4=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,0=17,1=17,0=12,0=12,0=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,0=16,1=16,0=12,0=12,0=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,0=17,1=17,0=12,0=12,0=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3</map_gui>
+	<extra_buttons>dpad</extra_buttons>
+	<directional>N=2</directional>
+	<begin_text>$username: It looks like I can only head north. This forest is really dense.</begin_text>
+</room>
+<room>
+	<id>2</id>
+	<title>The Maze of Yumega</title>
+	<random_encounters>true</random_encounters>
+	<re_button>Explore Area</re_button>
+	<items>true</items>
+	<item_list>1,4,3,6</item_list>
+	<map_gui>0=16,1=16,0=12,4=11,4=11,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,0=17,1=17,0=12,0=12,0=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,0=16,1=16,0=12,0=12,0=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,0=17,1=17,0=12,0=12,0=12,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3,7=3</map_gui>
+	<extra_buttons>dpad</extra_buttons>
+	<directional>N=4,S=1,E=5,W=3</directional>
+	<begin_text>The area is dark and densely forested</begin_text>
+</room>
+</data>

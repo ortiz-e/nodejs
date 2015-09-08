@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RPGStory</string>
+    <string name="hello_world">Welcome to the RPG Story!</string>
+    <string name="title_activity_new_game">New Game</string>
+    <string name="title_activity_choose_game">Choose Game</string>
+    <string name="title_activity_game_engine">Game Engine</string>
+    <string name="title_activity_battle_engine">Battle Engine</string>
+    <string name="title_activity_game_gui">GameGUI</string>
+
+</resources>

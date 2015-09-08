@@ -1,0 +1,116 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${packageName}.${activityClass}" >
+
+    <Button
+        android:id="@+id/rpg_status_button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="Status" />
+
+    <TextView
+        android:id="@+id/game_window"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/rpg_status_button"
+        android:maxLines="10"
+        android:text="" />
+
+    <Button
+        android:id="@+id/explore_button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Find"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/b_attack"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:enabled="false"
+        android:text="Continue" />
+
+    <Button
+        android:id="@+id/b_north"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/b_attack"
+        android:layout_above="@+id/b_east"
+        android:enabled="false"
+        android:text="North"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/b_east"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/b_south"
+        android:layout_toLeftOf="@+id/b_north"
+        android:enabled="false"
+        android:text="East"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/b_west"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/b_east"
+        android:layout_toRightOf="@+id/b_north"
+        android:enabled="false"
+        android:text="West"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/b_south"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/b_east"
+        android:layout_above="@+id/textAreaScroller"
+        android:layout_marginBottom="20dp"
+        android:enabled="false"
+        android:text="South"
+        android:visibility="invisible" />
+    
+    <ScrollView android:id="@+id/textAreaScroller" 
+    android:layout_width="fill_parent" 
+    android:layout_height="60dp" 
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:layout_marginBottom="10dp"
+    android:scrollbars="vertical">
+    
+	<TextView
+	    android:id="@+id/game_status"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_marginLeft="4dp"
+	    android:text="" />
+
+	</ScrollView>
+
+    <SurfaceView
+        android:id="@+id/surfaceView1"
+        android:layout_width="fill_parent"
+        android:layout_height="128dp"
+        android:layout_below="@+id/game_window"
+        android:layout_marginTop="26dp" />
+
+</RelativeLayout>
