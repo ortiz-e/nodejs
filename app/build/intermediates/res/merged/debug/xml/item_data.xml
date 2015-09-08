@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+<item>
+  <id>0</id>
+  <title>Blank</title>
+  <hp>0</hp>
+  <mp>0</mp>
+  <flag>0</flag>
+  <battle>false</battle>
+</item>
+<item>
+  <id>1</id>
+  <title>Potion</title>
+  <hp>20</hp>
+  <mp>0</mp>
+  <flag>0</flag>
+  <battle>true</battle>
+</item>
+<item>
+  <id>2</id>
+  <title>Ether</title>
+  <hp>0</hp>
+  <mp>10</mp>
+  <flag>0</flag>
+  <battle>true</battle>
+</item>
+<item>
+  <id>3</id>
+  <title>Antidote</title>
+  <hp>0</hp>
+  <mp>0</mp>
+  <flag>heal_poison</flag>
+  <battle>true</battle>
+</item>
+<item>
+  <id>4</id>
+  <title>Super Potion</title>
+  <hp>40</hp>
+  <mp>0</mp>
+  <flag>0</flag>
+  <battle>true</battle>
+</item>
+<item>
+  <id>5</id>
+  <title>Magic Emerald</title>
+  <hp>0</hp>
+  <mp>0</mp>
+  <flag>unobtainable</flag>
+  <battle>false</battle>
+</item>
+<item>
+  <id>6</id>
+  <title>Anti-paralysis</title>
+  <hp>0</hp>
+  <mp>0</mp>
+  <flag>heal_paralysis</flag>
+  <battle>true</battle>
+</item>
+</data><!-- From: file:/C:/Users/Elvin/AndroidstudioProjects/The%20RPG%20Story/app/src/main/res/xml/item_data.xml -->

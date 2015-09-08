@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${packageName}.${activityClass}" >
+
+    <TextView
+        android:id="@+id/game_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="66dp"
+        android:text="@string/hello_world" />
+
+    <Button
+        android:id="@+id/rpg_status_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/game_status"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:text="Load Game" />
+
+    <Button
+        android:id="@+id/explore_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/rpg_status_button"
+        android:layout_below="@+id/rpg_status_button"
+        android:layout_marginTop="72dp"
+        android:text="New Game" />
+
+    <Button
+        android:id="@+id/b_east"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/explore_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="54dp"
+        android:text="Delete All Data" />
+
+</RelativeLayout><!-- From: file:/C:/Users/Elvin/AndroidstudioProjects/The%20RPG%20Story/app/src/main/res/layout/activity_main.xml -->

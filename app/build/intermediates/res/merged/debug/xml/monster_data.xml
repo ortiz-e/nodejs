@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+<monster>
+  <id>0</id>
+  <name>Bat</name>
+  <stats>6,1,3,3,2,4</stats>
+  <gold>200</gold>
+  <exp>10</exp>
+  <flags>none</flags>
+ </monster>
+ <monster>
+  <id>1</id>
+  <name>Piranha</name>
+  <stats>7,2,3,3,2,3</stats>
+  <gold>400</gold>
+  <exp>18</exp>
+  <flags>weak_to=fire</flags>
+ </monster>
+ <monster>
+  <id>2</id>
+  <name>Poison Blob</name>
+  <stats>10,1,4,3,2,4</stats>
+  <gold>200</gold>
+  <exp>15</exp>
+  <flags>poison_contact=20,poison_attack=30</flags>
+ </monster>
+ <monster>
+  <id>3</id>
+  <name>Electric Blob</name>
+  <stats>10,1,4,3,2,4</stats>
+  <gold>200</gold>
+  <exp>30</exp>
+  <flags>paralyze_contact=10,paralyze_attack=20</flags>
+ </monster>
+</data><!-- From: file:/C:/Users/Elvin/AndroidstudioProjects/The%20RPG%20Story/app/src/main/res/xml/monster_data.xml -->

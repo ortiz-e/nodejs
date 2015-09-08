@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/C:/Users/Elvin/AndroidstudioProjects/The%20RPG%20Story/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="app_name">RPGStory</string>
+    <string name="hello_world">Welcome to the RPG Story!</string>
+    <string name="title_activity_battle_engine">Battle Engine</string>
+    <string name="title_activity_choose_game">Choose Game</string>
+    <string name="title_activity_game_engine">Game Engine</string>
+    <string name="title_activity_game_gui">GameGUI</string>
+    <string name="title_activity_new_game">New Game</string>
+    <!-- From: file:/C:/Users/Elvin/AndroidstudioProjects/The%20RPG%20Story/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="ButtonText">
+		  <item name="android:textColor">#FFFFFF</item>
+          <item name="android:minHeight">30dip</item>
+          <item name="android:maxHeight">40dip</item>
+          <item name="android:minWidth">60dip</item>
+          <item name="android:maxWidth">60dip</item>
+          <item name="android:textSize">15dp</item>
+	    <item name="android:textStyle">bold</item>
+	    <item name="android:shadowColor">#000000</item>
+	    <item name="android:shadowDx">1</item>
+	    <item name="android:shadowDy">1</item>
+	    <item name="android:shadowRadius">2</item>
+        </style>
+    <style name="HPBar" parent="android:Widget.ProgressBar.Horizontal">
+          <item name="android:indeterminateOnly">false</item>
+          <item name="android:progressDrawable">@drawable/hp_progressbar</item>
+          <item name="android:minHeight">15dip</item>
+          <item name="android:maxHeight">30dip</item>
+          <item name="android:minWidth">120dip</item>
+          <item name="android:maxWidth">200dip</item>
+        </style>
+    <style name="MPBar" parent="android:Widget.ProgressBar.Horizontal">
+          <item name="android:indeterminateOnly">false</item>
+          <item name="android:progressDrawable">@drawable/mp_progressbar</item>
+          <item name="android:minHeight">15dip</item>
+          <item name="android:maxHeight">30dip</item>
+          <item name="android:minWidth">120dip</item>
+          <item name="android:maxWidth">200dip</item>
+        </style>
+</resources>

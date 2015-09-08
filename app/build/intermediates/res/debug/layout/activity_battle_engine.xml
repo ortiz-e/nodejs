@@ -1,0 +1,167 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#444444"
+    tools:context="${packageName}.${activityClass}" >
+
+    <ProgressBar
+        android:id="@+id/my_mp"
+        style="@style/MPBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/my_hp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="101dp"
+        android:max="99"
+        android:progress="50" />
+
+    <Button
+        android:id="@+id/b_attack"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/my_mp"
+        android:layout_alignTop="@+id/my_mp"
+        android:layout_marginTop="34dp"
+        android:background="@drawable/red_button"
+        android:fontFamily="Roboto"
+        android:text="Attack" />
+
+    <ProgressBar
+        android:id="@+id/my_hp"
+        style="@style/HPBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/my_mp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="14dp"
+        android:max="99"
+        android:progress="99" />
+
+    <TextView
+        android:id="@+id/myhp_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/my_hp"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/my_hp"
+        android:text="HP: 10/10"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/mymp_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/myhp_text"
+        android:layout_alignTop="@+id/my_mp"
+        android:text="MP: 5/10"
+        android:textColor="#ffffff"
+        android:textColorHint="#ffffff" />
+
+    <Button
+        android:id="@+id/b_spells"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/b_attack"
+        android:layout_alignBottom="@+id/b_attack"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/b_attack"
+        android:background="@drawable/green_button"
+        android:fontFamily="Roboto"
+        android:text="Spells" />
+
+    <Button
+        android:id="@+id/b_items"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/b_spells"
+        android:layout_alignBottom="@+id/b_spells"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/b_spells"
+        android:background="@drawable/blue_button"
+        android:fontFamily="Roboto"
+        android:text="Items" />
+
+    <Button
+        android:id="@+id/b_flee"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/b_attack"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/b_items"
+        android:background="@drawable/purple_button"
+        android:fontFamily="Roboto"
+        android:text="Flee" />
+
+    <TextView
+        android:id="@+id/player_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/my_hp"
+        android:layout_alignLeft="@+id/my_hp"
+        android:layout_marginBottom="4dp"
+        android:text="Player Name"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#ffffff" />
+
+    <ProgressBar
+        android:id="@+id/enemyHP"
+        style="@style/HPBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/b_items"
+        android:layout_below="@+id/enemy_name"
+        android:layout_marginTop="4dp"
+        android:max="99"
+        android:progress="25" />
+
+    <TextView
+        android:id="@+id/enemy_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/enemyHP"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:text="Enemy Name"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF" />
+    
+     <ScrollView android:id="@+id/textAreaScroller" 
+    android:layout_width="fill_parent" 
+    android:layout_height="200dp" 
+    android:layout_below="@+id/enemyHP"
+    android:layout_alignParentLeft="true"
+    android:layout_marginTop="20dp"
+    android:scrollbars="vertical">
+    
+	<TextView
+	    android:id="@+id/game_status"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_marginLeft="4dp"
+	    android:text="You are now fighting "
+	    android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"  />
+
+	</ScrollView>
+
+     <TextView
+         android:id="@+id/mystatus_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/player_name"
+         android:layout_alignBottom="@+id/player_name"
+         android:layout_alignLeft="@+id/mymp_text"
+         android:text="Status:"
+         android:textColor="#ffffff"
+        android:textColorHint="#ffffff" />
+
+</RelativeLayout><!-- From: file:/C:/Users/Elvin/AndroidstudioProjects/The%20RPG%20Story/app/src/main/res/layout/activity_battle_engine.xml -->

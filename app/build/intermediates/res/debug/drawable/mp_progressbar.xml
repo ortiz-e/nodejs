@@ -1,0 +1,35 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  
+<!-- Define the background properties like color etc -->
+    <item android:id="@android:id/background">
+        <shape>
+            <corners
+                                android:radius="10dip" />
+            <gradient
+                    android:startColor="#282828"
+                    android:centerColor="#282828"
+                    android:centerY="1.0"
+                    android:endColor="#282828"
+                    android:angle="270"
+            />
+        </shape>
+    </item>
+
+ <!-- Define the progress properties like start color, end color etc -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners
+                                android:radius="10dip" />
+                <gradient
+                    android:startColor="#DCDC00"
+                    android:centerColor="#ACDC00"
+                    android:centerY="0.5"
+                    android:endColor="#ACDC00"
+                    android:angle="270"
+                />
+            </shape>
+        </clip>
+    </item>
+
+</layer-list><!-- From: file:/C:/Users/Elvin/AndroidstudioProjects/The%20RPG%20Story/app/src/main/res/drawable/mp_progressbar.xml -->
