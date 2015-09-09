@@ -37,7 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class GameEngine extends Activity implements SurfaceHolder.Callback {
+public class GameEngine extends Activity  {
 	
 	Bundle b;
 	Map<Integer, ArrayList<String>> cv = new HashMap<Integer,ArrayList<String>>();
@@ -108,7 +108,7 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 	TextView game_window;
 	TextView game_status;
 	ScrollView status_scroller;
-	SurfaceView game_gui;
+//	SurfaceView game_gui;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,14 +125,19 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 		game_window = (TextView)findViewById(R.id.game_window);
 		game_status = (TextView)findViewById(R.id.game_status);
 		status_scroller = (ScrollView)findViewById(R.id.textAreaScroller);
-		game_gui = (SurfaceView)findViewById(R.id.surfaceView1);
-		game_gui.getHolder().addCallback(this);
+	//	game_gui = (SurfaceView)findViewById(R.id.surfaceView1);
+	//	game_gui.getHolder().addCallback(this);
 		
 		//Loads all of the game data
-		loadRoomList();
-		loadItemList();
-		loadMonsterList();
-		loadSpellList();
+		try {
+			loadSpellList();
+			loadRoomList();
+			loadItemList();
+			loadMonsterList();
+		}
+		catch(IOException|XmlPullParserException e) {
+			e.printStackTrace();
+		}
 		beginRoom();
 		
 		//Listeners
@@ -154,7 +159,7 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 		loadData();
 		
 		//Picks out the data for the current room
-		loadRoom(the_room);
+		loadRoom();
 		
 		//Update GUI accordingly
 		updateGUI(the_room_data);
@@ -280,23 +285,18 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 		beginRoom();
 	}
 	
-	public void loadRoom(int room_id){
+	public void loadRoom(){
 		for(String content : cv.get(the_room)){
 			String[] values = content.split("<>");
 			the_room_data.put(values[0], values[1]);
 		}
-		map_tiles.clear();
-		String[] tileset = (the_room_data.get("map_gui").toString()).split(",");
-		for(int i=0; i < tileset.length; i+=1)  map_tiles.add(tileset[i]);
-		tryDrawing(game_gui.getHolder(), false);
-		
 	}
 	
-	public void updateGUI(ContentValues data){
+	private void updateGUI(ContentValues data){
 		setTitle(data.getAsString("title"));
 		random_encounters = data.getAsBoolean("random_encounters");
 		random_items = data.getAsBoolean("items");
-		if(random_items == true) available_items = data.getAsString("item_list").split(",");
+		if(random_items) available_items = data.getAsString("item_list").split(",");
 		((Button)findViewById(R.id.explore_button)).setText(data.getAsString("re_button"));
 		
 		//Let's check whether we have extra buttons to load, the directional category is the only one currently "installed"
@@ -323,7 +323,7 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 		}
 		
 		//Let's start loading up the text
-		if(gui_message == "") parseText(data.getAsString("begin_text"));
+		if(gui_message.equals("")) parseText(data.getAsString("begin_text"));
 	}
 	
 	public void parseText(String txt){
@@ -331,7 +331,7 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 		txt = txt.replace("$username", user_name);
 		if(txt.indexOf("$do_") > 0){
 			String parts[] = txt.split("\\$do_");
-			if(parts[1].indexOf("ecision") > 0){
+			if(parts[1].indexOf("decision") == 0){
 				String the_options = the_room_data.getAsString(parts[1]);
 				String[] eachoption = the_options.split("\\|\\|");
 				
@@ -344,7 +344,7 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 				//Get the decision number
 				awaiting_decision = Integer.valueOf(parts[1].substring(8, 9));
 			}
-			else if(parts[1].indexOf("oroom") > 0){
+			else if(parts[1].indexOf("toroom") == 0){
 				
 				next_room = Integer.valueOf(parts[1].substring(6, 7));
 				
@@ -455,13 +455,11 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 		if(odds == 1) {
 			int theitem = randInt(0, available_items.length - 1);
 			int item_found = Integer.valueOf(available_items[theitem]);
-			draw_x = 0; draw_y = 0; draw_text = "You found the item: " + items_data.get(item_found).get(0);
-			tryDrawing(game_gui.getHolder(), true);
-			//game_status.setText(game_status.getText() + "\nYou found the item: " + items_data.get(item_found).get(0));
+			game_status.setText(game_status.getText() + "\nYou found the item: " + items_data.get(item_found).get(0));
 			scrollDown();
 			
 			//If we can store this item//
-			if(items_data.get(item_found).get(3).equalsIgnoreCase("unobtainable") == false){
+			if(!items_data.get(item_found).get(3).equalsIgnoreCase("unobtainable")){
 				GameDatabase db = new GameDatabase(this);
 				SQLiteDatabase updater = db.getWritableDatabase();
 				SQLiteDatabase reader = db.getReadableDatabase();
@@ -483,12 +481,10 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 				updater.close();
 				db.close();
 			}
-			if(the_room_data.containsKey("item_found" + item_found) == true) parseText(the_room_data.getAsString("item_found" + item_found));
+			if(the_room_data.containsKey("item_found" + item_found)) parseText(the_room_data.getAsString("item_found" + item_found)); //what is this doing??
 		} //One in 6 chance of not finding anything
 		else if(odds == 6){
-			draw_x = 0; draw_y = 0; draw_text = "Nothing was^found!";
-			tryDrawing(game_gui.getHolder(), true);
-			//game_status.setText(game_status.getText() + "\nNothing was found!");
+			game_status.setText(game_status.getText() + "\nNothing was found!");
 			scrollDown();
 		}//2 in 6 chance of a battle
 		else if(odds == 5 || odds == 4){
@@ -508,11 +504,11 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 			i.putExtra("spd", user_spd);
 			i.putExtra("status", user_status);
 			i.putExtra("spells", spelllist);
-			i.putExtra("enemy_name", monster_data.get(enemy).get(0).toString());
-			i.putExtra("enemy_stats", monster_data.get(enemy).get(1).toString());
-			i.putExtra("enemy_gold", Integer.valueOf(monster_data.get(enemy).get(2).toString()));
-			i.putExtra("enemy_exp", Integer.valueOf(monster_data.get(enemy).get(3).toString()));
-			i.putExtra("enemy_flags", monster_data.get(enemy).get(4).toString());
+			i.putExtra("enemy_name", monster_data.get(enemy).get(0));
+			i.putExtra("enemy_stats", monster_data.get(enemy).get(1));
+			i.putExtra("enemy_gold", Integer.valueOf(monster_data.get(enemy).get(2)));
+			i.putExtra("enemy_exp", Integer.valueOf(monster_data.get(enemy).get(3)));
+			i.putExtra("enemy_flags", monster_data.get(enemy).get(4));
 			startActivityForResult(i, 1);
 		}//2 in 6 chance of coins
 		else{
@@ -520,9 +516,7 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 			int gold_found = ((the_room + 1) * (odds * 5)) + coins;
 			user_gold += gold_found;
 			if(user_gold > 50000000) user_gold = 50000000; //50 million is max amount of gold
-			//game_status.setText(game_status.getText() + "\nYou found " + gold_found + " gold!");
-			draw_x = 0; draw_y = 0; draw_text = "You found^" + gold_found + " gold!";
-			tryDrawing(game_gui.getHolder(), true);
+			game_status.setText(game_status.getText() + "\nYou found " + gold_found + " gold!");
 			scrollDown();
 			
 			//Update the database
@@ -544,11 +538,11 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 	            user_curhp = data.getIntExtra("newhp", 1);
             	user_curmp = data.getIntExtra("newmp", 1);
             	user_status = data.getIntExtra("status", 1);
-	            if(won == true){
+	            if(won){
 	            	int newexp = data.getIntExtra("newexp", 1);
 	            	int newgold = data.getIntExtra("newgold", 1);
-	            	draw_x = 0; draw_y = 0; draw_text = "You earned " + newexp + " EXP and " + newgold + " gold!";
-	    			tryDrawing(game_gui.getHolder(), true);
+					game_status.setText(game_status.getText() + "\nYou earned " + newexp + " EXP and " + newgold + " gold!");
+					scrollDown();
 	            	user_exp += newexp;
 	            	user_gold += newgold;
 	            	updateUserData();
@@ -556,8 +550,8 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 	            else {
 	            	user_gold -= data.getIntExtra("newgold", 1);
 	            	if(user_gold < 0) user_gold = 0;
-	            	draw_x = 0; draw_y = 0; draw_text = "You lost the battle! And some gold, too!";
-	    			tryDrawing(game_gui.getHolder(), true);
+					game_status.setText(game_status.getText() + "\nYou lost the battle! And some gold, too!");
+					scrollDown();
 	            	updateUserData();
 	            }
 	        }
@@ -566,15 +560,15 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 	        	int lostgold = (user_gold / 100) * hpleft;
 	        	user_gold -= lostgold;
 	        	if(user_gold < 0) user_gold = 0;
-	        	draw_x = 0; draw_y = 0; draw_text = "You cancelled the battle without fleeing! Gold lost: " + lostgold;
-    			tryDrawing(game_gui.getHolder(), true);
+				game_status.setText(game_status.getText() + "\nYou cancelled the battle without fleeing! Gold lost: " + lostgold);
+				scrollDown();
 	        	updateUserData();
 	        }
 	    }
 	}
 	
 	public void do_status_window(){
-		if(status_window_opened == false){
+		if(!status_window_opened){
 			calculateRPG();
 			b_rpg_status.setText("Close");
 			b_continue.setVisibility(View.INVISIBLE);
@@ -590,49 +584,53 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 			//Expand the scrollview to put the status message in
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) status_scroller.getLayoutParams();
 			final float scale = getResources().getDisplayMetrics().density;
-			int pixels = (int) (450 * scale + 0.5f);
-			params.height = pixels;
+			params.height = (int) (450 * scale + 0.5f);
 			status_scroller.setLayoutParams(params);
 			
 
 			String thestatus = user_name + 
-					"^Class: " + GameDatabase.CLASS_NAMES[user_class] + 
-					"^Status: " + GameDatabase.STATUS_NAMES[user_status] +
-					"^Level: " + user_level + 
-					"^EXP to level up: " + exp_for_next +
-					"^Total EXP: " + user_exp +
-					"^HP: " + user_curhp + " / " + user_maxhp + 
-					"^MP: " + user_curmp + " / " + user_maxmp + 
-					"^Attack: " + user_atk +
-					"^Defense: " + user_def + 
-					"^Magic Attack: " + user_satk + 
-					"^Magic Defense: " + user_sdef + 
-					"^Speed: " + user_spd + 
-					"^Gold: " + user_gold + 
-					"^^Items:^";
+					"\nClass: " + GameDatabase.CLASS_NAMES[user_class] + 
+					"\nStatus: " + GameDatabase.STATUS_NAMES[user_status] +
+					"\nLevel: " + user_level + 
+					"\nEXP to level up: " + exp_for_next +
+					"\nTotal EXP: " + user_exp +
+					"\nHP: " + user_curhp + " / " + user_maxhp + 
+					"\nMP: " + user_curmp + " / " + user_maxmp + 
+					"\nAttack: " + user_atk +
+					"\nDefense: " + user_def + 
+					"\nMagic Attack: " + user_satk + 
+					"\nMagic Defense: " + user_sdef + 
+					"\nSpeed: " + user_spd + 
+					"\nGold: " + user_gold + 
+					"\n\nItems:\n";
 			GameDatabase db = new GameDatabase(this);
 			SQLiteDatabase reader = db.getReadableDatabase();
 			Cursor entries = reader.rawQuery("SELECT quantity, id FROM itemdata WHERE owner=" + userid, null);
 			if(entries.getCount() > 990){
 				entries.moveToFirst();
 				thestatus = thestatus + entries.getInt(entries.getColumnIndex("quantity")) + " of " + items_data.get(entries.getInt(entries.getColumnIndex("id"))).get(0);
-				while(entries.moveToNext() == true){
+				while(entries.moveToNext()){
 					thestatus = thestatus + "^" + entries.getInt(entries.getColumnIndex("quantity")) + " of " + items_data.get(entries.getInt(entries.getColumnIndex("id"))).get(0);
 				}
 			}
 			else thestatus = thestatus + "You have no items!";
+
+            /* TODO: Add Spells list// */
+            /*
 			if(user_spells.length > 0 && false){
 				thestatus = thestatus + "\n\nSpells:";
 				for(int i = 0; i < user_spells.length; i += 1){
 					thestatus = thestatus + "\n" + spells_data.get(Integer.valueOf(user_spells[i])).get(0) + " (requires: " + spells_data.get(Integer.valueOf(user_spells[i])).get(1) + "MP)";
 				}
-			}
+			} */
+
 			entries.close();
 			reader.close();
 			db.close();
 			status_window_opened = true;
-			draw_x = 0; draw_y = 0; draw_text = thestatus;
-			tryDrawing(game_gui.getHolder(), true);
+			game_status.setText(thestatus);
+			//draw_x = 0; draw_y = 0; draw_text = thestatus;
+			//tryDrawing(game_gui.getHolder(), true);
 
 		}
 		else{
@@ -654,174 +652,150 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 			//Shrink back the scrollview to put the status message in
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) status_scroller.getLayoutParams();
 			final float scale = getResources().getDisplayMetrics().density;
-			int pixels = (int) (60 * scale + 0.5f);
-			params.height = pixels;
+			params.height = (int) (60 * scale + 0.5f);
 			status_scroller.setLayoutParams(params);
 			
 			status_window_opened = false;
-			draw_x = 0; draw_y = 0; draw_text = "Status window closed.";
-			tryDrawing(game_gui.getHolder(), true);
+			//draw_x = 0; draw_y = 0; draw_text = "Status window closed.";
+			//tryDrawing(game_gui.getHolder(), true);
+			game_status.setText("Status window closed");
 		}
 	}
 	
-	public void loadRoomList(){
-		
-		try {
-			 //Load game data
-			 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-		     factory.setNamespaceAware(false);
-		     Context context = getApplicationContext();
-		     Resources res = context.getResources();
-		     XmlResourceParser xpp = res.getXml(R.xml.game_data);
-		  
-		     //Helper stuff
-	         int curid = 0;
-	         ArrayList<String> temp = new ArrayList<String>();
-	
-	         // Returns the type of current event: START_TAG, END_TAG, etc..
-		     int eventType = xpp.getEventType();
-		     while (eventType != XmlPullParser.END_DOCUMENT) {
-		         if (eventType == XmlPullParser.START_TAG) {
-		        	 if(xpp.getName().equalsIgnoreCase("id")){
-	            		 curid = Integer.parseInt(xpp.nextText());
-		        	 } 
-		        	 if(xpp.getName().equalsIgnoreCase("room") == false && xpp.getName().equalsIgnoreCase("id") == false && xpp.getName().equalsIgnoreCase("data") == false){
-		        		 temp.add(xpp.getName() + "<>" + xpp.nextText());
-		        	 }
-		         
-		         } 
-		         else if(eventType==XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("room")){
-		        	 cv.put(curid, temp);
-		        	 temp = new ArrayList<String>();
-		         }
-		         eventType = xpp.next(); //move to next element
-		         //Restart Loop
-		     }
-			 } catch (XmlPullParserException e) {
-			     e.printStackTrace();
-			 } catch (IOException e) {
-			     e.printStackTrace();
-			 }
+	public void loadRoomList() throws XmlPullParserException, IOException {
+
+		//Load game data
+		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+		factory.setNamespaceAware(false);
+		Context context = getApplicationContext();
+		Resources res = context.getResources();
+		XmlResourceParser xpp = res.getXml(R.xml.game_data);
+
+		//Helper stuff
+		int curid = 0;
+		ArrayList<String> temp = new ArrayList<>();
+
+		// Returns the type of current event: START_TAG, END_TAG, etc..
+		int eventType = xpp.getEventType();
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+            if (eventType == XmlPullParser.START_TAG) {
+                if(xpp.getName().equalsIgnoreCase("id")){
+                    curid = Integer.parseInt(xpp.nextText());
+                }
+                if(!xpp.getName().equalsIgnoreCase("room") && !xpp.getName().equalsIgnoreCase("id") && !xpp.getName().equalsIgnoreCase("data")){
+                    temp.add(xpp.getName() + "<>" + xpp.nextText());
+                }
+
+            }
+            else if(eventType==XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("room")){
+                cv.put(curid, temp);
+                temp = new ArrayList<>();
+            }
+            eventType = xpp.next(); //move to next element
+            //Restart Loop
+        }
 	}
 	
-	public void loadItemList(){
-		
-		try {	
-			 //Load game data
-			 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-		     factory.setNamespaceAware(false);
-		     Context context = getApplicationContext();
-		     Resources res = context.getResources();
-		     XmlResourceParser xpp = res.getXml(R.xml.item_data);
-		  
-		     //Helper stuff
-	         int curid = 0;
-	         ArrayList<String> temp = new ArrayList<String>();
-	
-	         // Returns the type of current event: START_TAG, END_TAG, etc..
-		     int eventType = xpp.getEventType();
-		     while (eventType != XmlPullParser.END_DOCUMENT) {
-		         if (eventType == XmlPullParser.START_TAG) {
-		        	 if(xpp.getName().equalsIgnoreCase("id")){
-	            		 curid = Integer.parseInt(xpp.nextText());
-		        	 } 
-		        	 if(xpp.getName().equalsIgnoreCase("item") == false && xpp.getName().equalsIgnoreCase("id") == false && xpp.getName().equalsIgnoreCase("data") == false){
-		        		 temp.add(xpp.nextText());
-		        	 }
-		         
-		         } 
-		         else if(eventType==XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("item")){
-		        	 items_data.put(curid, temp);
-		        	 temp = new ArrayList<String>();
-		         }
-		         eventType = xpp.next(); //move to next element
-		         //Restart Loop
-		     }
-			 } catch (XmlPullParserException e) {
-			     e.printStackTrace();
-			 } catch (IOException e) {
-			     e.printStackTrace();
-			 }
+	public void loadItemList() throws XmlPullParserException, IOException {
+
+		//Load game data
+		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+		factory.setNamespaceAware(false);
+		Context context = getApplicationContext();
+		Resources res = context.getResources();
+		XmlResourceParser xpp = res.getXml(R.xml.item_data);
+
+		//Helper stuff
+		int curid = 0;
+		ArrayList<String> temp = new ArrayList<>();
+
+		// Returns the type of current event: START_TAG, END_TAG, etc..
+		int eventType = xpp.getEventType();
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+            if (eventType == XmlPullParser.START_TAG) {
+                if(xpp.getName().equalsIgnoreCase("id")){
+                    curid = Integer.parseInt(xpp.nextText());
+                }
+                if(!xpp.getName().equalsIgnoreCase("item") && !xpp.getName().equalsIgnoreCase("id") && !xpp.getName().equalsIgnoreCase("data")){
+                    temp.add(xpp.nextText());
+                }
+
+            }
+            else if(eventType==XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("item")){
+                items_data.put(curid, temp);
+                temp = new ArrayList<>();
+            }
+            eventType = xpp.next(); //move to next element
+            //Restart Loop
+        }
 	}
 	
-	public void loadMonsterList(){
-		
-		try {	
-			 //Load game data
-			 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-		     factory.setNamespaceAware(false);
-		     Context context = getApplicationContext();
-		     Resources res = context.getResources();
-		     XmlResourceParser xpp = res.getXml(R.xml.monster_data);
-		  
-		     //Helper stuff
-	         int curid = 0;
-	         ArrayList<String> temp = new ArrayList<String>();
-	
-	         // Returns the type of current event: START_TAG, END_TAG, etc..
-		     int eventType = xpp.getEventType();
-		     while (eventType != XmlPullParser.END_DOCUMENT) {
-		         if (eventType == XmlPullParser.START_TAG) {
-		        	 if(xpp.getName().equalsIgnoreCase("id")){
-	            		 curid = Integer.parseInt(xpp.nextText());
-		        	 } 
-		        	 if(xpp.getName().equalsIgnoreCase("monster") == false && xpp.getName().equalsIgnoreCase("id") == false && xpp.getName().equalsIgnoreCase("data") == false){
-		        		 temp.add(xpp.nextText());
-		        	 }
-		         
-		         } 
-		         else if(eventType==XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("monster")){
-		        	 monster_data.put(curid, temp);
-		        	 temp = new ArrayList<String>();
-		         }
-		         eventType = xpp.next(); //move to next element
-		         //Restart Loop
-		     }
-			 } catch (XmlPullParserException e) {
-			     e.printStackTrace();
-			 } catch (IOException e) {
-			     e.printStackTrace();
-			 }
+	public void loadMonsterList() throws XmlPullParserException, IOException {
+
+		//Load game data
+		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+		factory.setNamespaceAware(false);
+		Context context = getApplicationContext();
+		Resources res = context.getResources();
+		XmlResourceParser xpp = res.getXml(R.xml.monster_data);
+
+		//Helper stuff
+		int curid = 0;
+		ArrayList<String> temp = new ArrayList<>();
+
+		// Returns the type of current event: START_TAG, END_TAG, etc..
+		int eventType = xpp.getEventType();
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+            if (eventType == XmlPullParser.START_TAG) {
+                if(xpp.getName().equalsIgnoreCase("id")){
+                    curid = Integer.parseInt(xpp.nextText());
+                }
+                if(!xpp.getName().equalsIgnoreCase("monster") && !xpp.getName().equalsIgnoreCase("id") && !xpp.getName().equalsIgnoreCase("data")){
+                    temp.add(xpp.nextText());
+                }
+
+            }
+            else if(eventType==XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("monster")){
+                monster_data.put(curid, temp);
+                temp = new ArrayList<>();
+            }
+            eventType = xpp.next(); //move to next element
+            //Restart Loop
+        }
 	}
 	
-	public void loadSpellList(){
-		
-		try {	
-			 //Load game data
-			 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-		     factory.setNamespaceAware(false);
-		     Context context = getApplicationContext();
-		     Resources res = context.getResources();
-		     XmlResourceParser xpp = res.getXml(R.xml.spells);
-		  
-		     //Helper stuff
-	         int curid = 0;
-	         ArrayList<String> temp = new ArrayList<String>();
-	
-	         // Returns the type of current event: START_TAG, END_TAG, etc..
-		     int eventType = xpp.getEventType();
-		     while (eventType != XmlPullParser.END_DOCUMENT) {
-		         if (eventType == XmlPullParser.START_TAG) {
-		        	 if(xpp.getName().equalsIgnoreCase("id")){
-	            		 curid = Integer.parseInt(xpp.nextText());
-		        	 } 
-		        	 if(xpp.getName().equalsIgnoreCase("spell") == false && xpp.getName().equalsIgnoreCase("id") == false && xpp.getName().equalsIgnoreCase("data") == false){
-		        		 temp.add(xpp.nextText());
-		        	 }
-		         
-		         } 
-		         else if(eventType==XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("spell")){
-		        	 spells_data.put(curid, temp);
-		        	 temp = new ArrayList<String>();
-		         }
-		         eventType = xpp.next(); //move to next element
-		         //Restart Loop
-		     }
-			 } catch (XmlPullParserException e) {
-			     e.printStackTrace();
-			 } catch (IOException e) {
-			     e.printStackTrace();
-			 }
+	public void loadSpellList() throws XmlPullParserException, IOException {
+
+		/* Load game data */
+		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+		factory.setNamespaceAware(false);
+		Context context = getApplicationContext();
+		Resources res = context.getResources();
+		XmlResourceParser xpp = res.getXml(R.xml.spells);
+
+		//Helper stuff
+		int curid = 0;
+		ArrayList<String> temp = new ArrayList<>();
+
+		// Returns the type of current event: START_TAG, END_TAG, etc..
+		int eventType = xpp.getEventType();
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+            if (eventType == XmlPullParser.START_TAG) {
+                if(xpp.getName().equalsIgnoreCase("id")){
+                    curid = Integer.parseInt(xpp.nextText());
+                }
+                if(!xpp.getName().equalsIgnoreCase("spell") && !xpp.getName().equalsIgnoreCase("id") && !xpp.getName().equalsIgnoreCase("data")){
+                    temp.add(xpp.nextText());
+                }
+
+            }
+            else if(eventType==XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("spell")){
+                spells_data.put(curid, temp);
+                temp = new ArrayList<>();
+            }
+            eventType = xpp.next(); /* move to next element */
+            //Restart Loop
+        }
 	}
 	
 	public static int randInt(int min, int max) {
@@ -832,9 +806,7 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 
 	    // nextInt is normally exclusive of the top value,
 	    // so add 1 to make it inclusive
-	    int randomNum = rand.nextInt((max - min) + 1) + min;
-
-	    return randomNum;
+	    return rand.nextInt((max - min) + 1) + min;
 	}
 	
 	public void scrollDown(){
@@ -846,131 +818,4 @@ public class GameEngine extends Activity implements SurfaceHolder.Callback {
 			}
 		});
 	}
-	
-	
-	//Drawing functions
-	
-	@Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        tryDrawing(holder, false);
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int frmt, int w, int h) { 
-        tryDrawing(holder, false);
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {}
-    
-    private void tryDrawing(SurfaceHolder holder, boolean text) {
-    	 Log.i(TAG, "Trying to draw...");
-    	 Bitmap cache = game_gui.getDrawingCache();
-         Canvas canvas = holder.lockCanvas();
-         if (canvas == null) {
-             Log.e(TAG, "Cannot draw onto the canvas as it's null");
-         } else {
-        	 canvas.drawColor(Color.rgb(50, 50, 50));
-        	 if(text == true){
-        		 if(cache != null) canvas.drawBitmap(cache, game_gui.getWidth(), game_gui.getHeight(), null);
-        		 drawText(draw_x, draw_y, draw_text, canvas);
-        	 }
-        	 if(status_window_opened == false && (text == false || cache == null)) drawMyStuff(canvas);
-             holder.unlockCanvasAndPost(canvas);
-         }
-    }
-    
-    private void drawMyStuff(final Canvas canvas) {
-    	Resources res = getResources();
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inSampleSize = 6;
-		Bitmap bitmap = BitmapFactory.decodeResource(res, R.raw.rpg_tileset, options);
-		int tilewidth = (bitmap.getWidth() / 32);
-		int tileheight = (bitmap.getHeight() / 63);
-		int destwidth = game_gui.getWidth() / 16;
-		int destheight = game_gui.getHeight() / 5;
-		if(!map_tiles.isEmpty()){
-			for(int i = 0; i < 16*4; i+=1){
-				int curtilexnum = Integer.valueOf((map_tiles.get(i).split("="))[0]); 
-				int curtileynum = Integer.valueOf((map_tiles.get(i).split("="))[1]); 
-				Rect thetile = new Rect(curtilexnum*tilewidth,curtileynum*tileheight,(curtilexnum*tilewidth)+tilewidth,(curtileynum*tileheight)+tileheight);
-				Rect destination = new Rect((i % 16)*destwidth,((int)Math.floor((double)i / 16.0))*destheight,((i % 16)*destwidth)+destwidth,(((int)Math.floor((double)i / 16.0))*destheight)+destheight);
-				canvas.drawBitmap(bitmap, thetile, destination, null);
-			}
-		}
-    }
-    
-    private void drawText(int x, int y, String text, Canvas canvas){
-    	int len = text.length();
-    	x+=5;
-    	y+=5;
-    	int destheight = (game_gui.getHeight() / 5) * 4;
-    	int rowlength = game_gui.getWidth() / 5;
-    	int grid = (game_gui.getHeight() / 5) / 5;
-    	if(status_window_opened == true){
-    		destheight = 0;
-    		grid = game_gui.getHeight() / 5;
-    	}
-    	drawBox(destheight, x, rowlength, grid, canvas);
-    	writeFont(x,y,text,canvas);
-    }
-    
-    public void drawBox(int start_y, int start_x, int width, int height, Canvas canvas){
-    	for(int yy = 0; yy < height; yy += 1){
-    		for(int xx = 0; xx < width; xx += 1){
-    			Bitmap todraw = null;
-    			if(xx == 0 && yy == 0) todraw = BitmapFactory.decodeResource(getResources(), R.raw.topleft);
-    			if(xx > 0 && xx + 1 < width && yy == 0) todraw = BitmapFactory.decodeResource(getResources(), R.raw.top);
-    			if(xx + 1 == width && yy == 0) todraw = BitmapFactory.decodeResource(getResources(), R.raw.topright);
-    			if(xx == 0 && yy > 0 && yy + 1 < height) todraw = BitmapFactory.decodeResource(getResources(), R.raw.left);
-    			if(xx + 1 == width && yy > 0 && yy + 1 < height) todraw = BitmapFactory.decodeResource(getResources(), R.raw.right);
-    			if(xx == 0 && yy + 1 == height) todraw = BitmapFactory.decodeResource(getResources(), R.raw.bottom_left);
-    			if(xx > 0 && xx + 1 < width && yy + 1 == height) todraw = BitmapFactory.decodeResource(getResources(), R.raw.bottom);
-    			if(xx + 1 == width && yy + 1 == height) todraw = BitmapFactory.decodeResource(getResources(), R.raw.bottom_right);
-    			if(todraw != null){
-    				Rect drawplace = new Rect((xx*5)+start_x,(yy*5)+start_y,start_x+(xx*5)+5,start_y + (yy*5)+5);
-    				canvas.drawBitmap(todraw, null, drawplace, null);
-    			}
-    		}
-    	}
-    }
-    
-    public void write(int x, int y, String text, Canvas canvas){
-    	int len = text.length();
-    	x+=5;
-    	y+=5;
-    	Bitmap font = BitmapFactory.decodeResource(getResources(), R.raw.font);
-    	int w = font.getWidth() / 16;
-    	int h = font.getHeight() / 16;
-    	int halp = 0;
-    	for(int i = 0; i < len; i += 1){
-    		if(text.charAt(i) == ("^").charAt(0)){
-    			//x -= (halp*w)+halp;
-    			halp = 0;
-    			y += h+5;
-    			continue;
-    		}
-    		int ch = (int)text.charAt(i);
-    		int bitmap_x = (int)Math.floor((double)ch % 16) * w;
-    		int bitmap_y = (int)Math.floor((double)ch / 16.0) * h;
-    		Rect theletter = new Rect(bitmap_x, bitmap_y, bitmap_x + w - 1, bitmap_y + h - 1);
-    		Rect drawplace = new Rect((halp*w)+x, y, x+(halp*w)+w, y + h);
-    		canvas.drawBitmap(font, theletter, drawplace, null);
-    		halp += 1;
-    	}
-    }
-    
-    public void writeFont(int x, int y, String text, Canvas canvas){
-    	Typeface font = Typeface.createFromAsset(getAssets(), "mariorpg.ttf");
-    	Paint paint = new Paint();
-    	paint.setColor(Color.WHITE);
-    	paint.setTextSize(16);
-    	paint.setTypeface(font);
-    	paint.setShadowLayer(3, 4, 4, Color.BLUE);
-    	int i = 30;
-    	for(String piece : text.split("\\^")){
-    		canvas.drawText(piece, x+5, y+i, paint);
-    		i+=30;
-    	}
-    }
 }

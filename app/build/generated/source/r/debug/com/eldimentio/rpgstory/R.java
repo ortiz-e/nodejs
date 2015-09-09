@@ -29,7 +29,7 @@ public final class R {
         public static final int b_south=0x7f080014;
         public static final int b_spells=0x7f080005;
         public static final int b_west=0x7f080015;
-        public static final int editText1=0x7f080018;
+        public static final int editText1=0x7f080017;
         public static final int enemyHP=0x7f080009;
         public static final int enemy_name=0x7f08000a;
         public static final int explore_button=0x7f080011;
@@ -41,12 +41,11 @@ public final class R {
         public static final int mymp_text=0x7f080004;
         public static final int mystatus_text=0x7f08000d;
         public static final int player_name=0x7f080008;
-        public static final int rowTextView=0x7f08001a;
+        public static final int rowTextView=0x7f080019;
         public static final int rpg_status_button=0x7f08000f;
-        public static final int spinner1=0x7f080019;
-        public static final int surfaceView1=0x7f080016;
+        public static final int spinner1=0x7f080018;
         public static final int textAreaScroller=0x7f08000b;
-        public static final int the_gui=0x7f080017;
+        public static final int the_gui=0x7f080016;
         public static final int userslist=0x7f08000e;
     }
     public static final class layout {

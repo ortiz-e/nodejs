@@ -106,12 +106,5 @@
 
 	</ScrollView>
 
-    <SurfaceView
-        android:id="@+id/surfaceView1"
-        android:layout_width="fill_parent"
-        android:layout_height="128dp"
-        android:layout_below="@+id/game_window"
-        android:layout_marginTop="26dp" />
-
 </RelativeLayout>
 <!-- From: file:/C:/Users/Elvin/AndroidstudioProjects/The%20RPG%20Story/app/src/main/res/layout/activity_game_engine.xml -->

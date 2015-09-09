@@ -171,16 +171,30 @@ public class BattleEngine extends Activity {
 	//this loads the enemy's flags
 	public boolean loadFlags(){
 		if(enemy_flags == null) return false;
-		for(int i = 0; i < enemy_flags.length; i+= 1){
-			String[] theflag = enemy_flags[i].split("=");
-			switch(theflag[0]){
-				case "poison_contact": enemy_poison_contact = Integer.valueOf(theflag[1]); break;
-				case "poison_attack": enemy_poison_attack = Integer.valueOf(theflag[1]); break;
-				case "paralyze_contact": enemy_paralyze_contact = Integer.valueOf(theflag[1]); break;
-				case "paralyze_attack": enemy_paralyze_attack = Integer.valueOf(theflag[1]); break;
-				case "spikes_contact" : enemy_spikes_contact = Integer.valueOf(theflag[1]); break;
-				case "weak_to" : enemy_weakness = theflag[1]; break;
-				case "strong_against" : enemy_strength = theflag[1]; break;
+		for (String enemy_flag : enemy_flags) {
+			String[] theflag = enemy_flag.split("=");
+			switch (theflag[0]) {
+				case "poison_contact":
+					enemy_poison_contact = Integer.valueOf(theflag[1]);
+					break;
+				case "poison_attack":
+					enemy_poison_attack = Integer.valueOf(theflag[1]);
+					break;
+				case "paralyze_contact":
+					enemy_paralyze_contact = Integer.valueOf(theflag[1]);
+					break;
+				case "paralyze_attack":
+					enemy_paralyze_attack = Integer.valueOf(theflag[1]);
+					break;
+				case "spikes_contact":
+					enemy_spikes_contact = Integer.valueOf(theflag[1]);
+					break;
+				case "weak_to":
+					enemy_weakness = theflag[1];
+					break;
+				case "strong_against":
+					enemy_strength = theflag[1];
+					break;
 			}
 		}
 		return true;
@@ -323,137 +337,143 @@ public class BattleEngine extends Activity {
 		}
 		
 		public void loadItemFlags(String itemname, String[] itemflags){
-			for(int i = 0; i < itemflags.length; i+= 1){
-				switch(itemflags[i]){
-					case "heal_poison": 
-						if(user_status == 1 || user_status == 3){
+			for (String itemflag : itemflags) {
+				switch (itemflag) {
+					case "heal_poison":
+						if (user_status == 1 || user_status == 3) {
 							user_status = 0;
 							publishProgress("The " + itemname + " has cured your poison!");
-						}
-						else publishProgress("But you weren't poisoned!");
+						} else publishProgress("But you weren't poisoned!");
 						break;
 					case "heal_paralysis":
-						if(user_status == 2){
+						if (user_status == 2) {
 							user_status = 0;
 							publishProgress("The " + itemname + " has cured your paralysis!");
-						}
-						else publishProgress("But you weren't paralyzed!");
+						} else publishProgress("But you weren't paralyzed!");
 						break;
 					case "swap_hp":
-						if(user_curhp != enemy_hp){
+						if (user_curhp != enemy_hp) {
 							boolean meup;
-							if(user_curhp > enemy_hp)  meup = true;
-							else meup = false;
+							meup = user_curhp > enemy_hp;
 							int myhp = enemy_hp;
 							enemy_hp = user_curhp;
 							user_curhp = myhp;
-							if(user_curhp > user_maxhp) user_curhp = user_maxhp;
-							if(enemy_hp > enemy_maxhp) enemy_hp = enemy_maxhp;
-							update_bars(0,((int)Math.floor(((double)user_curhp / (double)user_maxhp) * 100)),(meup == true ? false : true));
-							update_bars(1,((int)Math.floor(((double)enemy_hp / (double)enemy_maxhp) * 100)),(meup == false ? false : true));
+							if (user_curhp > user_maxhp) user_curhp = user_maxhp;
+							if (enemy_hp > enemy_maxhp) enemy_hp = enemy_maxhp;
+							update_bars(0, ((int) Math.floor(((double) user_curhp / (double) user_maxhp) * 100)), !meup);
+							update_bars(1, ((int) Math.floor(((double) enemy_hp / (double) enemy_maxhp) * 100)), !meup);
 							publishProgress("You and " + enemy_name + " have switched HP!");
-						}
-						else publishProgress("...but you and " + enemy_name + " both have the same HP left!");
+						} else
+							publishProgress("...but you and " + enemy_name + " both have the same HP left!");
 				}
 			}
 		}
 		
 		public int loadSpellFlags(String spellname, String[] spellflags){
-			for(int i = 0; i < spellflags.length; i+= 1){
-				int chance = randInt(0,99);
-				String[] theflag = spellflags[i].split("=");
-				switch(theflag[0]){
-					case "burn" : if(chance <= Integer.valueOf(theflag[1])) {
-						enemy_status = 4; 
-						publishProgress("The enemy was burned! Their attack will be lowered somewhat!");
-						return 2;
-					} break;
-					case "poison" : if(chance <= Integer.valueOf(theflag[1])) {
-						enemy_status = 1; 
-						publishProgress("The enemy was poisoned!");
-						return 2;
-					} break;
-					case "paralyze" : if(chance <= Integer.valueOf(theflag[1])){
-						enemy_status = 2;
-						publishProgress("The enemy has been paralyzed!");
-						return 2;
-					} break;
-					case "heal" : user_curhp += (user_maxhp / (100 / Integer.valueOf(theflag[1])));
-						if(user_curhp > user_maxhp) user_curhp = user_maxhp;
-						increaser = (int)Math.floor(((double)user_curhp / (double)user_maxhp) * 100);
-						update_bars(0,increaser,true);
+			for (String spellflag : spellflags) {
+				int chance = randInt(0, 99);
+				String[] theflag = spellflag.split("=");
+				switch (theflag[0]) {
+					case "burn":
+						if (chance <= Integer.valueOf(theflag[1])) {
+							enemy_status = 4;
+							publishProgress("The enemy was burned! Their attack will be lowered somewhat!");
+							return 2;
+						}
+						break;
+					case "poison":
+						if (chance <= Integer.valueOf(theflag[1])) {
+							enemy_status = 1;
+							publishProgress("The enemy was poisoned!");
+							return 2;
+						}
+						break;
+					case "paralyze":
+						if (chance <= Integer.valueOf(theflag[1])) {
+							enemy_status = 2;
+							publishProgress("The enemy has been paralyzed!");
+							return 2;
+						}
+						break;
+					case "heal":
+						user_curhp += (user_maxhp / (100 / Integer.valueOf(theflag[1])));
+						if (user_curhp > user_maxhp) user_curhp = user_maxhp;
+						increaser = (int) Math.floor(((double) user_curhp / (double) user_maxhp) * 100);
+						update_bars(0, increaser, true);
 						publishProgress("The spell healed your HP!");
 						return 2;
-					case "double_attack" : if((double)Integer.valueOf((user_atk_multiplier.split(","))[0]) <= 1){
-						user_atk = (int)((user_atk / (double)(Integer.valueOf((user_atk_multiplier.split(","))[0]))) * 2);
-						user_atk_multiplier = "2," + theflag[1];
-						publishProgress("Your attack has doubled for " + theflag[1] + " turns!");
-					}
-					else publishProgress("You can't increase your attack any further!");
-					return 2;
-					case "double_defense" : if((double)Integer.valueOf((user_def_multiplier.split(","))[0]) <= 1){
-						user_def = (int)((user_def / (double)(Integer.valueOf((user_def_multiplier.split(","))[0]))) * 2);
-						user_def_multiplier = "2," + theflag[1];
-						publishProgress("Your defense has doubled for " + theflag[1] + " turns!");
-					}
-					else publishProgress("You can't increase your defense any further!");
-					return 2;
-					case "double_satk" : if((double)Integer.valueOf((user_satk_multiplier.split(","))[0]) <= 1){
-						user_satk = (int)((user_satk / (double)(Integer.valueOf((user_satk_multiplier.split(","))[0]))) * 2);
-						user_satk_multiplier = "2," + theflag[1];
-						publishProgress("Your special attack has doubled for " + theflag[1] + " turns!");
-					}
-					else publishProgress("You can't increase your special attack any further!");
-					return 2;
-					case "double_sdef" : if((double)Integer.valueOf((user_sdef_multiplier.split(","))[0]) <= 1){
-						user_sdef = (int)((user_sdef / (double)(Integer.valueOf((user_sdef_multiplier.split(","))[0]))) * 2);
-						user_sdef_multiplier = "2," + theflag[1];
-						publishProgress("Your special defense has doubled for " + theflag[1] + " turns!");
-					}
-					else publishProgress("You can't increase your special defense any further!");
-					return 2;
-					case "double_speed" : if((double)Integer.valueOf((user_spd_multiplier.split(","))[0]) <= 1){
-						user_spd = (int)((user_spd / (double)(Integer.valueOf((user_spd_multiplier.split(","))[0]))) * 2);
-						user_spd_multiplier = "2," + theflag[1];
-						publishProgress("Your speed has doubled for " + theflag[1] + " turns!");
-					}
-					else publishProgress("You can't increase your speed any further!");
-					return 2;
-					case "halve_attack" : if((double)Integer.valueOf((user_atk_multiplier.split(","))[0]) >= 1){
-						user_atk = (int)((user_atk / (double)(Integer.valueOf((user_atk_multiplier.split(","))[0]))) / 2);
-						user_atk_multiplier = "0.5," + theflag[1];
-						publishProgress("Your attack has halved for " + theflag[1] + " turns!");
-					}
-					else publishProgress("Your attack won't decrease any further!");
-					return 2;
-					case "halve_defense" : if((double)Integer.valueOf((user_def_multiplier.split(","))[0]) >= 1){
-						user_def = (int)((user_def / (double)(Integer.valueOf((user_def_multiplier.split(","))[0]))) / 2);
-						user_def_multiplier = "0.5," + theflag[1];
-						publishProgress("Your defense has halved for " + theflag[1] + " turns!");
-					}
-					else publishProgress("Your defense won't decrease any further!");
-					return 2;
-					case "halve_satk" : if((double)Integer.valueOf((user_satk_multiplier.split(","))[0]) >= 1){
-						user_satk = (int)((user_satk / (double)(Integer.valueOf((user_satk_multiplier.split(","))[0]))) / 2);
-						user_satk_multiplier = "0.5," + theflag[1];
-						publishProgress("Your special attack has halved for " + theflag[1] + " turns!");
-					}
-					else publishProgress("Your special attack won't decrease any further!");
-					return 2;
-					case "halve_sdef" : if((double)Integer.valueOf((user_sdef_multiplier.split(","))[0]) >= 1){
-						user_sdef = (int)((user_sdef / (double)(Integer.valueOf((user_sdef_multiplier.split(","))[0]))) / 2);
-						user_sdef_multiplier = "0.5," + theflag[1];
-						publishProgress("Your special defense has halved for " + theflag[1] + " turns!");
-					}
-					else publishProgress("Your special defense won't decrease any further!");
-					return 2;
-					case "halve_speed" : if((double)Integer.valueOf((user_spd_multiplier.split(","))[0]) >= 1){
-						user_spd = (int)((user_spd / (double)(Integer.valueOf((user_spd_multiplier.split(","))[0]))) / 2);
-						user_spd_multiplier = "0.5," + theflag[1];
-						publishProgress("Your speed has halved for " + theflag[1] + " turns!");
-					}
-					else publishProgress("Your speed won't decrease any further!");
-					return 2;
+					case "double_attack":
+						if ((double) Integer.valueOf((user_atk_multiplier.split(","))[0]) <= 1) {
+							user_atk = (int) ((user_atk / (double) (Integer.valueOf((user_atk_multiplier.split(","))[0]))) * 2);
+							user_atk_multiplier = "2," + theflag[1];
+							publishProgress("Your attack has doubled for " + theflag[1] + " turns!");
+						} else publishProgress("You can't increase your attack any further!");
+						return 2;
+					case "double_defense":
+						if ((double) Integer.valueOf((user_def_multiplier.split(","))[0]) <= 1) {
+							user_def = (int) ((user_def / (double) (Integer.valueOf((user_def_multiplier.split(","))[0]))) * 2);
+							user_def_multiplier = "2," + theflag[1];
+							publishProgress("Your defense has doubled for " + theflag[1] + " turns!");
+						} else publishProgress("You can't increase your defense any further!");
+						return 2;
+					case "double_satk":
+						if ((double) Integer.valueOf((user_satk_multiplier.split(","))[0]) <= 1) {
+							user_satk = (int) ((user_satk / (double) (Integer.valueOf((user_satk_multiplier.split(","))[0]))) * 2);
+							user_satk_multiplier = "2," + theflag[1];
+							publishProgress("Your special attack has doubled for " + theflag[1] + " turns!");
+						} else
+							publishProgress("You can't increase your special attack any further!");
+						return 2;
+					case "double_sdef":
+						if ((double) Integer.valueOf((user_sdef_multiplier.split(","))[0]) <= 1) {
+							user_sdef = (int) ((user_sdef / (double) (Integer.valueOf((user_sdef_multiplier.split(","))[0]))) * 2);
+							user_sdef_multiplier = "2," + theflag[1];
+							publishProgress("Your special defense has doubled for " + theflag[1] + " turns!");
+						} else
+							publishProgress("You can't increase your special defense any further!");
+						return 2;
+					case "double_speed":
+						if ((double) Integer.valueOf((user_spd_multiplier.split(","))[0]) <= 1) {
+							user_spd = (int) ((user_spd / (double) (Integer.valueOf((user_spd_multiplier.split(","))[0]))) * 2);
+							user_spd_multiplier = "2," + theflag[1];
+							publishProgress("Your speed has doubled for " + theflag[1] + " turns!");
+						} else publishProgress("You can't increase your speed any further!");
+						return 2;
+					case "halve_attack":
+						if ((double) Integer.valueOf((user_atk_multiplier.split(","))[0]) >= 1) {
+							user_atk = (int) ((user_atk / (double) (Integer.valueOf((user_atk_multiplier.split(","))[0]))) / 2);
+							user_atk_multiplier = "0.5," + theflag[1];
+							publishProgress("Your attack has halved for " + theflag[1] + " turns!");
+						} else publishProgress("Your attack won't decrease any further!");
+						return 2;
+					case "halve_defense":
+						if ((double) Integer.valueOf((user_def_multiplier.split(","))[0]) >= 1) {
+							user_def = (int) ((user_def / (double) (Integer.valueOf((user_def_multiplier.split(","))[0]))) / 2);
+							user_def_multiplier = "0.5," + theflag[1];
+							publishProgress("Your defense has halved for " + theflag[1] + " turns!");
+						} else publishProgress("Your defense won't decrease any further!");
+						return 2;
+					case "halve_satk":
+						if ((double) Integer.valueOf((user_satk_multiplier.split(","))[0]) >= 1) {
+							user_satk = (int) ((user_satk / (double) (Integer.valueOf((user_satk_multiplier.split(","))[0]))) / 2);
+							user_satk_multiplier = "0.5," + theflag[1];
+							publishProgress("Your special attack has halved for " + theflag[1] + " turns!");
+						} else publishProgress("Your special attack won't decrease any further!");
+						return 2;
+					case "halve_sdef":
+						if ((double) Integer.valueOf((user_sdef_multiplier.split(","))[0]) >= 1) {
+							user_sdef = (int) ((user_sdef / (double) (Integer.valueOf((user_sdef_multiplier.split(","))[0]))) / 2);
+							user_sdef_multiplier = "0.5," + theflag[1];
+							publishProgress("Your special defense has halved for " + theflag[1] + " turns!");
+						} else publishProgress("Your special defense won't decrease any further!");
+						return 2;
+					case "halve_speed":
+						if ((double) Integer.valueOf((user_spd_multiplier.split(","))[0]) >= 1) {
+							user_spd = (int) ((user_spd / (double) (Integer.valueOf((user_spd_multiplier.split(","))[0]))) / 2);
+							user_spd_multiplier = "0.5," + theflag[1];
+							publishProgress("Your speed has halved for " + theflag[1] + " turns!");
+						} else publishProgress("Your speed won't decrease any further!");
+						return 2;
 				}
 			}
 			return 0;
@@ -462,7 +482,6 @@ public class BattleEngine extends Activity {
 		protected String doInBackground(Void...voids){
 
 			//Initate variables
-			boolean me_first;
 			int damage;
 			
 			//Action 0 is ATTACK, this is the most standard of battle methods
@@ -470,11 +489,10 @@ public class BattleEngine extends Activity {
 				
 				//If I am faster than the opponent and I'm not paralyzed
 				if(user_spd >= enemy_spd && user_status != 2){
-					me_first = true;
 					publishProgress(user_name + " attacks first!");
 					sleeper();
 					attackEnemy();
-					if(onEnemyContact() == true){
+					if(onEnemyContact()){
 						publishProgress("You died from the damage! You lost " + enemy_gold + " gold!");
 						sleeper();
 						sleeper();
@@ -530,7 +548,6 @@ public class BattleEngine extends Activity {
 				}
 				else{
 					//In this case, the opponent is faster
-					me_first = false;
 					publishProgress(enemy_name + " attacks first!");
 					sleeper();
 					enemyAttacks();
@@ -545,7 +562,7 @@ public class BattleEngine extends Activity {
 					}
 					else{
 						attackEnemy();
-						if(onEnemyContact() == true){
+						if(onEnemyContact()){
 							publishProgress("You died from the damage! You lost " + enemy_gold + " gold!");
 							sleeper();
 							sleeper();
@@ -831,7 +848,7 @@ public class BattleEngine extends Activity {
 			
 	        public void run() {
 	            if(which == 0){
-	            	if(up == false){
+	            	if(!up){
 	            		while(myhp.getProgress() > towhere){
 		            		myhp.post(new Runnable() {
 		    	                public void run() {
@@ -853,7 +870,7 @@ public class BattleEngine extends Activity {
 	            	}
 	            }
 	            else if (which == 1){
-	            	if(up == false){
+	            	if(!up){
 	            		while(tahp.getProgress() > towhere){
 		            		tahp.post(new Runnable() {
 		    	                public void run() {
@@ -875,7 +892,7 @@ public class BattleEngine extends Activity {
 	            	}
 	            }
 	            else if(which == 2){
-	            	if(up == false){
+	            	if(!up){
 	            		while(mymp.getProgress() > towhere){
 		            		mymp.post(new Runnable() {
 		    	                public void run() {
@@ -907,7 +924,7 @@ public class BattleEngine extends Activity {
 		returnIntent.putExtra("newhp", user_curhp);
 		returnIntent.putExtra("newmp", user_curmp);
 		returnIntent.putExtra("status", user_status);
-		if(i_won == true) returnIntent.putExtra("won", true);
+		if(i_won) returnIntent.putExtra("won", true);
 		else returnIntent.putExtra("won", false);
 		setResult(RESULT_OK, returnIntent);
 		finish();
@@ -915,7 +932,7 @@ public class BattleEngine extends Activity {
 	
 
 	protected void onClose(){
-		if(battle_complete == false){
+		if(!battle_complete){
 			Intent returnIntent = new Intent();
 			returnIntent.putExtra("user_hpleft", ((double)user_curhp / (double)user_maxhp) * 100);
 			setResult(RESULT_CANCELED, returnIntent);
@@ -984,7 +1001,7 @@ public class BattleEngine extends Activity {
 				item_mapper.add(i, entries.getInt(entries.getColumnIndex("id")));
 				i += 1;
 			}
-			while(entries.moveToNext() == true){
+			while(entries.moveToNext()){
 				if(GameEngine.items_data.get(entries.getInt(entries.getColumnIndex("id"))).get(4).equalsIgnoreCase("true")){
 					my_items.add(i, entries.getInt(entries.getColumnIndex("quantity")) + " of " + GameEngine.items_data.get(entries.getInt(entries.getColumnIndex("id"))).get(0));
 					item_mapper.add(i, entries.getInt(entries.getColumnIndex("id")));
@@ -1044,9 +1061,9 @@ public class BattleEngine extends Activity {
 	}
 	
 	public void doStatChanges(){
-		if(user_atk_multiplier != "1,1"){
+		if(!user_atk_multiplier.equals("1,1")){
 			String[] values = user_atk_multiplier.split(",");
-			if(values[1] == "1"){
+			if(values[1].equals("1")){
 				user_atk = (int)(user_atk / (double)(Integer.valueOf(values[0])));
 				user_atk_multiplier = "1,1";
 			}
@@ -1054,9 +1071,9 @@ public class BattleEngine extends Activity {
 				user_atk_multiplier = values[0] + "," + (Integer.valueOf(values[1]) - 1);
 			}
 		}
-		if(user_def_multiplier != "1,1"){
+		if(!user_def_multiplier.equals("1,1")){
 			String[] values = user_def_multiplier.split(",");
-			if(values[1] == "1"){
+			if(values[1].equals("1")){
 				user_def = (int)(user_def / (double)(Integer.valueOf(values[0])));
 				user_def_multiplier = "1,1";
 			}
@@ -1064,9 +1081,9 @@ public class BattleEngine extends Activity {
 				user_def_multiplier = values[0] + "," + (Integer.valueOf(values[1]) - 1);
 			}
 		}
-		if(user_satk_multiplier != "1,1"){
+		if(!user_satk_multiplier.equals("1,1")){
 			String[] values = user_satk_multiplier.split(",");
-			if(values[1] == "1"){
+			if(values[1].equals("1")){
 				user_satk = (int)(user_satk / (double)(Integer.valueOf(values[0])));
 				user_satk_multiplier = "1,1";
 			}
@@ -1074,9 +1091,9 @@ public class BattleEngine extends Activity {
 				user_satk_multiplier = values[0] + "," + (Integer.valueOf(values[1]) - 1);
 			}
 		}
-		if(user_sdef_multiplier != "1,1"){
+		if(!user_sdef_multiplier.equals("1,1")){
 			String[] values = user_sdef_multiplier.split(",");
-			if(values[1] == "1"){
+			if(values[1].equals("1")){
 				user_sdef = (int)(user_sdef / (double)(Integer.valueOf(values[0])));
 				user_sdef_multiplier = "1,1";
 			}
@@ -1084,9 +1101,9 @@ public class BattleEngine extends Activity {
 				user_sdef_multiplier = values[0] + "," + (Integer.valueOf(values[1]) - 1);
 			}
 		}
-		if(user_spd_multiplier != "1,1"){
+		if(!user_spd_multiplier.equals("1,1")){
 			String[] values = user_spd_multiplier.split(",");
-			if(values[1] == "1"){
+			if(values[1].equals("1")){
 				user_spd = (int)(user_spd / (double)(Integer.valueOf(values[0])));
 				user_spd_multiplier = "1,1";
 			}
@@ -1096,9 +1113,9 @@ public class BattleEngine extends Activity {
 		}
 		
 		//enemy stats
-		if(enemy_atk_multiplier != "1,1"){
+		if(!enemy_atk_multiplier.equals("1,1")){
 			String[] values = enemy_atk_multiplier.split(",");
-			if(values[1] == "1"){
+			if(values[1].equals("1")){
 				enemy_atk = (int)(enemy_atk / (double)(Integer.valueOf(values[0])));
 				enemy_atk_multiplier = "1,1";
 			}
@@ -1106,9 +1123,9 @@ public class BattleEngine extends Activity {
 				enemy_atk_multiplier = values[0] + "," + (Integer.valueOf(values[1]) - 1);
 			}
 		}
-		if(enemy_def_multiplier != "1,1"){
+		if(!enemy_def_multiplier.equals("1,1")){
 			String[] values = enemy_def_multiplier.split(",");
-			if(values[1] == "1"){
+			if(values[1].equals("1")){
 				enemy_def = (int)(enemy_def / (double)(Integer.valueOf(values[0])));
 				enemy_def_multiplier = "1,1";
 			}
@@ -1116,9 +1133,9 @@ public class BattleEngine extends Activity {
 				enemy_def_multiplier = values[0] + "," + (Integer.valueOf(values[1]) - 1);
 			}
 		}
-		if(enemy_satk_multiplier != "1,1"){
+		if(!enemy_satk_multiplier.equals("1,1")){
 			String[] values = enemy_satk_multiplier.split(",");
-			if(values[1] == "1"){
+			if(values[1].equals("1")){
 				enemy_satk = (int)(enemy_satk / (double)(Integer.valueOf(values[0])));
 				enemy_satk_multiplier = "1,1";
 			}
@@ -1126,9 +1143,9 @@ public class BattleEngine extends Activity {
 				enemy_satk_multiplier = values[0] + "," + (Integer.valueOf(values[1]) - 1);
 			}
 		}
-		if(enemy_sdef_multiplier != "1,1"){
+		if(!enemy_sdef_multiplier.equals("1,1")){
 			String[] values = enemy_sdef_multiplier.split(",");
-			if(values[1] == "1"){
+			if(values[1].equals("1")){
 				enemy_sdef = (int)(enemy_sdef / (double)(Integer.valueOf(values[0])));
 				enemy_sdef_multiplier = "1,1";
 			}
@@ -1136,9 +1153,9 @@ public class BattleEngine extends Activity {
 				enemy_sdef_multiplier = values[0] + "," + (Integer.valueOf(values[1]) - 1);
 			}
 		}
-		if(enemy_spd_multiplier != "1,1"){
+		if(!enemy_spd_multiplier.equals("1,1")){
 			String[] values = enemy_spd_multiplier.split(",");
-			if(values[1] == "1"){
+			if(values[1].equals("1")){
 				enemy_spd = (int)(enemy_spd / (double)(Integer.valueOf(values[0])));
 				enemy_spd_multiplier = "1,1";
 			}
@@ -1156,8 +1173,6 @@ public class BattleEngine extends Activity {
 
 	    // nextInt is normally exclusive of the top value,
 	    // so add 1 to make it inclusive
-	    int randomNum = rand.nextInt((max - min) + 1) + min;
-
-	    return randomNum;
+	    return rand.nextInt((max - min) + 1) + min;
 	}
 }
