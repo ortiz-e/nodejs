@@ -8,18 +8,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -400,7 +394,7 @@ public class BattleEngine extends Activity {
 						if (user_curhp > user_maxhp) user_curhp = user_maxhp;
 						increaser = (int) Math.floor(((double) user_curhp / (double) user_maxhp) * 100);
 						update_bars(0, increaser, true);
-						publishProgress("The spell healed your HP!");
+						publishProgress("The spell has healed some of your HP!");
 						return 2;
 					case "double_attack":
 						if ((double) Integer.valueOf((user_atk_multiplier.split(","))[0]) <= 1) {

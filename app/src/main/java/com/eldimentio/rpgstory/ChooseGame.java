@@ -31,9 +31,10 @@ public class ChooseGame extends Activity {
 	        data.moveToFirst();
 			List<String> content = new ArrayList<String>();
 			content.add(data.getString(data.getColumnIndex("name")) + " --- " + data.getString(data.getColumnIndex("curroom")));
-			while(data.moveToNext() == true){
+			while(data.moveToNext()){
 				content.add(data.getString(data.getColumnIndex("name")) + " --- " + data.getString(data.getColumnIndex("curroom")));
 			}
+			data.close();
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.listviewrow, content);
 			ListView l = (ListView)findViewById(R.id.userslist);
 			l.setAdapter(adapter);
